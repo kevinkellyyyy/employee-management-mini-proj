@@ -98,3 +98,27 @@ mat-form-field.small {
 .mat-mdc-paginator-container {
   justify-content: space-between !important;
 }
+
+.mat-mdc-paginator-page-size-label,
+.mat-mdc-paginator-range-label,
+.mat-mdc-select-value-text {
+  font-size: 12px !important;
+}
+
+@media (max-width: 650px) {
+  .mat-mdc-paginator-page-size-label,
+  .mat-mdc-paginator-range-label,
+  .mat-mdc-select-value-text {
+    font-size: 9px !important;
+  }
+
+  .mat-mdc-paginator-page-size,
+  .mat-mdc-paginator-range-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .mat-mdc-paginator-range-label {
+    margin: unset !important;
+  }
+}

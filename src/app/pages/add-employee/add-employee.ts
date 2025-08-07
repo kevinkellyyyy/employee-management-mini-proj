@@ -15,6 +15,9 @@ import { Employee } from '../../models/employee.model';
 import { dummyJobGroups } from '../../data/dummy-data';
 import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
 import moment from 'moment';
+import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { SpinnerIcon } from '../../assets/svg/spinner-icon';
 
 @Component({
   selector: 'app-add-employee',
@@ -25,6 +28,7 @@ import moment from 'moment';
     MatSelectModule,
     MatDatepickerModule,
     MatFormFieldModule,
+    SpinnerIcon,
   ],
   templateUrl: './add-employee.html',
   styleUrl: './add-employee.scss',
@@ -44,12 +48,15 @@ import moment from 'moment';
 })
 export class AddEmployee {
   private fb = inject(FormBuilder);
+  private router = inject(Router);
   private employeeService = inject(EmployeeStateService);
+  private snackBar = inject(MatSnackBar);
 
   employeeForm: FormGroup;
   emailRegex = signal(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/);
   jobGroups = signal(dummyJobGroups);
   today = signal(new Date());
+  isLoading = signal(false);
 
   constructor() {
     this.employeeForm = this.fb.group({
@@ -67,6 +74,7 @@ export class AddEmployee {
 
   onSubmit() {
     if (this.employeeForm.valid) {
+      this.isLoading.set(true);
       const formValue = this.employeeForm.value;
 
       const formattedDate = moment(formValue.birthDate).format('YYYY-MM-DD');
@@ -77,8 +85,17 @@ export class AddEmployee {
         basicSalary: Number(formValue.basicSalary),
       };
 
-      this.employeeService.add(newEmployee);
-      window.history.back();
+      setTimeout(() => {
+        this.isLoading.set(false);
+        this.employeeService.add(newEmployee);
+
+        // Show success snackbar
+        this.snackBar.open('Karyawan berhasil ditambahkan!', 'Tutup', {
+          duration: 5000,
+        });
+
+        this.router.navigate(['/']); // pakai ini agar kembali ke halaman utama dengan reset params karena ada data baru paling atas
+      }, 1000);
     } else {
       this.employeeForm.markAllAsTouched();
     }
@@ -88,6 +105,8 @@ export class AddEmployee {
     window.history.back();
   }
 
+  // untuk membuat tampilan pada form lebih user-friendly (input 10000000 -> 10.000.000)
+  // ketik char lain tidak akan mengubah nilai pada form hanya terima angka
   onSalaryInput(event: Event) {
     const input = (event.target as HTMLInputElement).value.replace(/\./g, '');
     const numericValue = Number(input.replace(/[^0-9]/g, ''));

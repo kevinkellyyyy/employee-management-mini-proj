@@ -69,7 +69,7 @@
           <mat-label>Gaji Pokok</mat-label>
           <input
             matInput
-            type="text"
+            type="tel"
             formControlName="basicSalary"
             [value]="
               employeeForm.get('basicSalary')?.value
@@ -91,9 +91,11 @@
         <mat-form-field appearance="outline" class="w-full small">
           <mat-label>Grup Pekerjaan</mat-label>
           <mat-select formControlName="group" required>
-            <mat-option *ngFor="let group of jobGroups()" [value]="group">
+            @for (group of jobGroups(); track group) {
+            <mat-option [value]="group">
               {{ group }}
             </mat-option>
+            }
           </mat-select>
           @if (employeeForm.get('group')?.hasError('required')) {
           <mat-error>Group pekerjaan dibutuhkan</mat-error>
@@ -121,16 +123,25 @@
       <button
         type="submit"
         (click)="onCancel()"
-        class="bg-main-yellow text-gray-800 px-6 py-2 rounded-lg hover:bg-secondary-yellow"
+        [disabled]="isLoading()"
+        class="bg-main-yellow text-gray-800 px-6 py-2 rounded-lg hover:bg-secondary-yellow disabled:opacity-50"
       >
         Batal
       </button>
       <button
         type="submit"
         (click)="onSubmit()"
-        class="bg-main-blue text-white px-6 py-2 rounded-lg hover:bg-secondary-blue"
+        [disabled]="isLoading()"
+        class="bg-main-blue text-white px-6 py-2 rounded-lg hover:bg-secondary-blue disabled:opacity-50"
       >
-        Simpan
+        @if (isLoading()) {
+        <div class="flex items-center gap-2">
+          <app-spinner-icon />
+          <p>Menyimpan Data</p>
+        </div>
+        } @else {
+        <p>Simpan</p>
+        }
       </button>
     </div>
   </div>

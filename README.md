@@ -1,59 +1,45 @@
-# EmployeeManagementMiniProj
+# Employee Management Mini Project
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.1.4.
+Proyek ini dibuat menggunakan [Angular CLI](https://github.com/angular/angular-cli) versi 20.1.4.
 
-## Development server
+## Demo
 
-To start a local development server, run:
+Project ini sudah di deploy dengan menggunakan vercel dan dapat di cek langsung disini
+https://employee-management-mini-proj.vercel.app/
+
+## Clone project
+
+Untuk clone project, jalankan perintah:
+
+```bash
+git clone https://github.com/kevinkellyyyy/employee-management-mini-proj.git
+```
+
+## Menjalankan Server Develop
+
+Pertama install node_modules agar dependency di package json dapat digunakan
+
+```bash
+npm install
+```
+
+Untuk memulai server pengembangan lokal, jalankan perintah:
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Setelah server berjalan, buka browser dan akses `http://localhost:4200/`. Aplikasi akan otomatis memuat ulang jika ada perubahan pada file sumber.
 
-## Code scaffolding
+## Beberapa catatan pada project ini
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Asset icon svg
 
-```bash
-ng generate component component-name
-```
+- semua file .svg pada project ini saya ambil dari https://www.svgrepo.com/ (gartis)
+- lalu diconvert ke dalam bentuk html elemen svg melalui https://nikitahl.github.io/svg-2-code/
+- dan disimpan dengan standalone component dari hasil convert svg tersebut di assets/svg
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### Library tambahan
 
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- untuk ui framework saya menambahkan Material UI untuk keperluan di beberapa komponen seperti modal dialog, tabel, dan form fields
+- serta moment js untuk keperluan formating tanggal

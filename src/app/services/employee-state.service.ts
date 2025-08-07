@@ -36,6 +36,4 @@ export class EmployeeStateService {
     this.employeesSubject.next(updated);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
   }
-
-  // Untuk edit, bisa ditambahkan di iterasi berikutnya.
 }

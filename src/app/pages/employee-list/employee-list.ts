@@ -13,6 +13,9 @@ import { EditIcon } from '../../assets/svg/edit-icon';
 import { DeleteIcon } from '../../assets/svg/delete-icon';
 import { FilterIcon } from '../../assets/svg/filter-icon';
 import { CloseIcon } from '../../assets/svg/close-icon';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDelete } from '../../components/modal-delete';
+import { ModalEdit } from '../../components/modal-edit';
 
 @Component({
   selector: 'app-employee-list',
@@ -36,6 +39,7 @@ export class EmployeeList implements OnInit {
   private employeeState: EmployeeStateService = inject(EmployeeStateService);
   private router: Router = inject(Router);
   private route: ActivatedRoute = inject(ActivatedRoute);
+  private dialog: MatDialog = inject(MatDialog);
 
   employees = signal<Employee[]>([]);
   dataSource = new MatTableDataSource<Employee>([]);
@@ -62,6 +66,11 @@ export class EmployeeList implements OnInit {
 
   @ViewChild(MatPaginator) paginator?: MatPaginator;
 
+  isLargeScreen = signal(window.innerWidth >= 350);
+
+  // setelah init cek dulu dari query params
+  // jika ada search, set searchTerm, searchBy, page, size, sortBy
+  // jika tidak ada, gunakan default
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
       this.searchTerm.set(params['search'] ?? '');
@@ -75,8 +84,14 @@ export class EmployeeList implements OnInit {
         this.applySearch();
       });
     });
+
+    window.addEventListener('resize', () => {
+      this.isLargeScreen.set(window.innerWidth >= 350);
+    });
   }
 
+  // ini akan berjalan ketika paginator di pergunakan (next page, prev page, change page size)
+  // dan akan menguppdate query params
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator ?? null;
     if (this.paginator) {
@@ -117,14 +132,18 @@ export class EmployeeList implements OnInit {
     this.applySearch();
   }
 
-  editEmployee(username: string) {
-    // Navigate to edit page or open a dialog for editing
-    console.log('Edit employee:', username);
-    // Implement navigation or dialog logic here
+  openDialogEdit(data: Employee) {
+    this.dialog.open(ModalEdit, {
+      width: '500px',
+      data,
+    });
   }
 
-  deleteEmployee(username: string) {
-    this.employeeState.delete(username);
+  openDialogDelete(data: Employee) {
+    this.dialog.open(ModalDelete, {
+      width: '500px',
+      data,
+    });
   }
 
   handleRowClick(row: Employee) {

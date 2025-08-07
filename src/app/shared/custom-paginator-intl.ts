@@ -5,3 +5,4 @@ export function getCustomPaginatorIntl() {
   paginatorIntl.itemsPerPageLabel = 'Jumlah data per halaman';
   return paginatorIntl;
 }
+// untuk keperluan mengganti default tulisan pada footer paginator
