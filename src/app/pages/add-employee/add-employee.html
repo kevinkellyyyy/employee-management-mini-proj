@@ -1,0 +1,137 @@
+<div class="container mx-auto px-4 py-8 add-employee-page">
+  <div class="bg-white rounded-lg shadow-lg p-6">
+    <h2 class="text-2xl font-bold mb-6 text-gray-800">Tambah Karyawan Baru</h2>
+    <form
+      [formGroup]="employeeForm"
+      (ngSubmit)="onSubmit()"
+      class="flex flex-col gap-2"
+    >
+      <mat-form-field appearance="outline" class="w-full small">
+        <mat-label>Username</mat-label>
+        <input matInput formControlName="username" required />
+        @if (employeeForm.get('username')?.hasError('required')) {
+        <mat-error>Username is required</mat-error>
+        }
+      </mat-form-field>
+
+      <div class="flex flex-col md:flex-row items-center gap-2 md:gap-4">
+        <mat-form-field appearance="outline" class="w-full small">
+          <mat-label>Nama depan</mat-label>
+          <input matInput formControlName="firstName" required />
+          @if (employeeForm.get('firstName')?.hasError('required')) {
+          <mat-error>Nama depan dibutuhkan</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full small">
+          <mat-label>Nama belakang</mat-label>
+          <input matInput formControlName="lastName" required />
+          @if (employeeForm.get('lastName')?.hasError('required')) {
+          <mat-error>Nama belakang dibutuhkan</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="flex flex-col md:flex-row items-center gap-2 md:gap-4">
+        <mat-form-field appearance="outline" class="w-full small">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" formControlName="email" required />
+          @if (employeeForm.get('email')?.hasError('required')) {
+          <mat-error>Email dibutuhkan</mat-error>
+          } @if (employeeForm.get('email')?.hasError('pattern')) {
+          <mat-error>Masukkan alamat email yang valid</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full small">
+          <mat-label>Tanggal Lahir</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker"
+            formControlName="birthDate"
+            (click)="picker.open()"
+            [max]="today()"
+            readonly
+          />
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker touchUi #picker></mat-datepicker>
+          @if (employeeForm.get('birthDate')?.hasError('required')) {
+          <mat-error>Tanggal lahir dibutuhkan</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="flex flex-col md:flex-row items-center gap-2 md:gap-4">
+        <mat-form-field appearance="outline" class="w-full small">
+          <mat-label>Gaji Pokok</mat-label>
+          <input
+            matInput
+            type="text"
+            formControlName="basicSalary"
+            [value]="
+              employeeForm.get('basicSalary')?.value
+                ? (employeeForm.get('basicSalary')?.value
+                  | number : '1.0-0' : 'id')
+                : ''
+            "
+            (input)="onSalaryInput($event)"
+            required
+          />
+          <span matTextPrefix>Rp&nbsp;</span>
+          @if (employeeForm.get('basicSalary')?.hasError('required')) {
+          <mat-error>Gaji Pokok dibutuhkan</mat-error>
+          } @if (employeeForm.get('basicSalary')?.hasError('min')) {
+          <mat-error>Gaji Pokok harus lebih besar dari 0</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full small">
+          <mat-label>Grup Pekerjaan</mat-label>
+          <mat-select formControlName="group" required>
+            <mat-option *ngFor="let group of jobGroups()" [value]="group">
+              {{ group }}
+            </mat-option>
+          </mat-select>
+          @if (employeeForm.get('group')?.hasError('required')) {
+          <mat-error>Group pekerjaan dibutuhkan</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <input type="hidden" formControlName="status" />
+
+      <mat-form-field appearance="outline" class="w-full small">
+        <mat-label>Deskripsi</mat-label>
+        <textarea
+          matInput
+          formControlName="description"
+          rows="3"
+          required
+        ></textarea>
+        @if (employeeForm.get('description')?.hasError('required')) {
+        <mat-error>Deskripsi dibutuhkan</mat-error>
+        }
+      </mat-form-field>
+    </form>
+
+    <div class="flex flex-col md:flex-row md:justify-end gap-4">
+      <button
+        type="submit"
+        (click)="onCancel()"
+        class="bg-main-yellow text-gray-800 px-6 py-2 rounded-lg hover:bg-secondary-yellow"
+      >
+        Batal
+      </button>
+      <button
+        type="submit"
+        (click)="onSubmit()"
+        class="bg-main-blue text-white px-6 py-2 rounded-lg hover:bg-secondary-blue"
+      >
+        Simpan
+      </button>
+    </div>
+  </div>
+</div>

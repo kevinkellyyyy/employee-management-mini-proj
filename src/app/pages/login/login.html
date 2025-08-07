@@ -1,0 +1,90 @@
+<div
+  class="min-h-screen flex items-center justify-center login-container py-12 px-4 sm:px-6 lg:px-8"
+>
+  <div class="max-w-lg w-full space-y-8">
+    <div class="text-center">
+      <h2 class="mt-6 text-3xl font-extrabold text-white">
+        Employee Management System
+      </h2>
+      <p class="mt-2 text-sm text-white">
+        Akses dan kelola data karyawan Anda dengan mudah!
+      </p>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-xl p-8">
+      <form
+        class="flex flex-col gap-3"
+        [formGroup]="loginForm"
+        (ngSubmit)="onSubmit()"
+      >
+        <div class="flex flex-col gap-3">
+          <mat-form-field appearance="outline" class="w-full small">
+            <mat-label>Username</mat-label>
+            <input
+              matInput
+              formControlName="username"
+              placeholder="Masukkan username anda"
+              required
+            />
+            @if (isFieldInvalid('username')) {
+            <mat-error>{{ getFieldError("username") }}</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-full small">
+            <mat-label>Password</mat-label>
+            <input
+              matInput
+              [type]="showPassword() ? 'text' : 'password'"
+              formControlName="password"
+              placeholder="Masukkan password anda"
+              required
+            />
+            <button
+              type="button"
+              class="absolute inset-y-0 right-0 flex items-center"
+              (click)="togglePasswordVisibility()"
+            >
+              @if (!showPassword()) {
+              <!-- semua file .svg saya ambil dari https://www.svgrepo.com/
+                lalu diconvert ke dalam bentuk html elemen svg melalui https://nikitahl.github.io/svg-2-code/ -->
+              <app-eye-open-icon />
+              } @if (showPassword()) {
+              <app-eye-close-icon />
+              }
+            </button>
+            @if (isFieldInvalid('password')) {
+            <mat-error>{{ getFieldError("password") }}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        @if (loginError()) {
+        <div class="text-red-600 text-sm text-center bg-red-50 p-3 rounded-md">
+          {{ loginError() }}
+        </div>
+        }
+
+        <button
+          type="submit"
+          class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-main-blue hover:bg-secondary-blue disabled:opacity-50 disabled:cursor-not-allowed"
+          [disabled]="isLoading()"
+        >
+          <!-- simulate loading (post api login) -->
+          @if (isLoading()) {
+          <app-spinner-icon />
+          Harap tunggu... } @else { Masuk }
+        </button>
+
+        <!-- Akses Demo -->
+        <div
+          class="demo-credentials mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md"
+        >
+          <p class="text-sm text-main-blue font-medium">Akses Demo:</p>
+          <p class="text-xs text-secondary-blue mt-1">Username: admin</p>
+          <p class="text-xs text-secondary-blue">Password: password123</p>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
