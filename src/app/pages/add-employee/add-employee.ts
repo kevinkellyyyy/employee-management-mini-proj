@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,
@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { EmployeeStateService } from '../../services/employee-state.service';
@@ -26,6 +27,7 @@ import { SpinnerIcon } from '../../assets/svg/spinner-icon';
     ReactiveFormsModule,
     MatInputModule,
     MatSelectModule,
+    MatAutocompleteModule,
     MatDatepickerModule,
     MatFormFieldModule,
     SpinnerIcon,
@@ -55,6 +57,16 @@ export class AddEmployee {
   employeeForm: FormGroup;
   emailRegex = signal(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/);
   jobGroups = signal(dummyJobGroups);
+  groupFilter = signal('');
+  filteredJobGroups = computed(() => {
+    const filter = this.groupFilter().toLowerCase();
+    if (!filter) {
+      return this.jobGroups();
+    }
+    return this.jobGroups().filter((group) =>
+      group.toLowerCase().includes(filter)
+    );
+  });
   today = signal(new Date());
   isLoading = signal(false);
 
@@ -111,5 +123,17 @@ export class AddEmployee {
     const input = (event.target as HTMLInputElement).value.replace(/\./g, '');
     const numericValue = Number(input.replace(/[^0-9]/g, ''));
     this.employeeForm.get('basicSalary')?.setValue(numericValue);
+  }
+
+  // filter job groups based on user input
+  onGroupInput(event: Event) {
+    const input = (event.target as HTMLInputElement).value;
+    this.groupFilter.set(input);
+  }
+
+  // handle group selection from autocomplete
+  onGroupSelected(group: string) {
+    this.employeeForm.get('group')?.setValue(group);
+    this.groupFilter.set(group);
   }
 }

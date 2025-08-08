@@ -90,13 +90,23 @@
 
         <mat-form-field appearance="outline" class="w-full small">
           <mat-label>Grup Pekerjaan</mat-label>
-          <mat-select formControlName="group" required>
-            @for (group of jobGroups(); track group) {
+          <input
+            matInput
+            formControlName="group"
+            [matAutocomplete]="auto"
+            (input)="onGroupInput($event)"
+            required
+          />
+          <mat-autocomplete
+            #auto="matAutocomplete"
+            (optionSelected)="onGroupSelected($event.option.value)"
+          >
+            @for (group of filteredJobGroups(); track group) {
             <mat-option [value]="group">
               {{ group }}
             </mat-option>
             }
-          </mat-select>
+          </mat-autocomplete>
           @if (employeeForm.get('group')?.hasError('required')) {
           <mat-error>Group pekerjaan dibutuhkan</mat-error>
           }
